@@ -11,10 +11,8 @@ class MainActivity : AppCompatActivity() {
 
     /** Just help to do not use find view by id **/
     private val binding: ActivityMainBinding by viewBinding()
+    val model = Model()
 
-    private val savedTextsArray = mutableListOf<String>()
-    private var currentIndex = 0
-    private var isFirstValue = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,28 +20,22 @@ class MainActivity : AppCompatActivity() {
 
         binding.saveButton.setOnClickListener {
             val printedText = binding.editText.text.toString()
-            savedTextsArray.add(printedText)
+            model.save(printedText)
         }
 
         binding.showPreviousSavedTextButton.setOnClickListener {
-            if (currentIndex > 0) {
-                currentIndex--
-                binding.savedTextTextView.text = savedTextsArray[currentIndex]
-            } else {
+            val result = model.showPrevious()
+            if (result.isEmpty())
                 Toast.makeText(this, "No texts before showed!", Toast.LENGTH_LONG).show()
-            }
+            else binding.savedTextTextView.text = result
         }
 
         binding.showNextSavedTextButton.setOnClickListener {
-            if (isFirstValue) {
-                binding.savedTextTextView.text = savedTextsArray[0]
-                isFirstValue = false
-            }
-            if (currentIndex < savedTextsArray.lastIndex) {
-                currentIndex++
-                binding.savedTextTextView.text = savedTextsArray[currentIndex]
-            } else {
+            val result = model.showNext()
+            if (result.isEmpty()) {
                 Toast.makeText(this, "No texts after showed!", Toast.LENGTH_LONG).show()
+            } else {
+                binding.savedTextTextView.text = result
             }
         }
     }
