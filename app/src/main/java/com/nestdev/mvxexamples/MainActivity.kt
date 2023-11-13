@@ -7,12 +7,12 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.nestdev.mvxexamples.databinding.ActivityMainBinding
 
 /** Our screen **/
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), IMain.IMainView {
 
     /** Just help to do not use find view by id **/
     private val binding: ActivityMainBinding by viewBinding()
-    val model = Model()
 
+    private val presenter: IMain.IMainPresenter = MainPresenterImpl(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,23 +20,26 @@ class MainActivity : AppCompatActivity() {
 
         binding.saveButton.setOnClickListener {
             val printedText = binding.editText.text.toString()
-            model.save(printedText)
+            presenter.pressedSave(printedText)
         }
 
         binding.showPreviousSavedTextButton.setOnClickListener {
-            val result = model.showPrevious()
-            if (result.isEmpty())
-                Toast.makeText(this, "No texts before showed!", Toast.LENGTH_LONG).show()
-            else binding.savedTextTextView.text = result
+           presenter.pressedPrevious()
         }
 
         binding.showNextSavedTextButton.setOnClickListener {
-            val result = model.showNext()
-            if (result.isEmpty()) {
-                Toast.makeText(this, "No texts after showed!", Toast.LENGTH_LONG).show()
-            } else {
-                binding.savedTextTextView.text = result
-            }
+           presenter.pressedNext()
         }
+
+        binding.newButton.setOnClickListener {
+            presenter.pressedNewButton()
+        }
+    }
+
+    override fun showToast(text: String) {
+        Toast.makeText(this, text, Toast.LENGTH_LONG).show()
+    }
+    override fun showText(text: String) {
+        binding.savedTextTextView.text = text
     }
 }
