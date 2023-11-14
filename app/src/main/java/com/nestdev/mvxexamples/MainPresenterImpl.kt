@@ -1,6 +1,6 @@
 package com.nestdev.mvxexamples
 
-class MainPresenterImpl(val view: IMain.IMainView): IMain.IMainPresenter {
+class MainPresenterImpl(private val view: IMain.IMainView): IMain.IMainPresenter {
 
     private val model = Model()
 

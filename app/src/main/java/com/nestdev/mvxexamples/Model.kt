@@ -1,7 +1,5 @@
 package com.nestdev.mvxexamples
 
-import android.widget.Toast
-
 class Model {
 
     /** data **/
