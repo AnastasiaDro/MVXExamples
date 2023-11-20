@@ -25,6 +25,9 @@ class MainActivity : AppCompatActivity() {
             else
                 showText(text)
         }
+        viewModel.resultData.observe(this) { result ->
+            binding.resultTextView.text = result.toString()
+        }
 
         binding.saveButton.setOnClickListener {
             val printedText = binding.editText.text.toString()
