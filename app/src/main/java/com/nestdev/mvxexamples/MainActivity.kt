@@ -20,33 +20,30 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        viewModel.textData.observe(this) { text ->
-            if (text == null) showToast("No Value")
-            else
-                showText(text)
-        }
-        viewModel.resultData.observe(this) { result ->
-            binding.resultTextView.text = result.toString()
+
+        viewModel.stateData.observe(this) { state ->
+            binding.resultTextView.text = state.result.toString()
+            binding.savedTextTextView.text = state.text
+
+            if (!state.result)
+                showToast("No value!")
         }
 
         binding.saveButton.setOnClickListener {
             val printedText = binding.editText.text.toString()
-            viewModel.save(printedText)
+            viewModel.send(SaveEvent(printedText))
         }
 
         binding.showPreviousSavedTextButton.setOnClickListener {
-           viewModel.getPrevious()
+           viewModel.send(AskPreviousTextEvent())
         }
 
         binding.showNextSavedTextButton.setOnClickListener {
-           viewModel.getNext()
+           viewModel.send(AskNextTextEvent())
         }
     }
 
     private fun showToast(text: String) {
         Toast.makeText(this, text, Toast.LENGTH_LONG).show()
-    }
-    private fun showText(text: String) {
-        binding.savedTextTextView.text = text
     }
 }
